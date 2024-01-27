@@ -228,4 +228,86 @@ class UrlLauncherClientImpl implements UrlLauncherClient {
       },
     );
   }
+
+  @override
+  Future<Result<void>> launchTelegram({required String user}) async {
+    return Result.asyncGuard(
+      () async {
+        _logger?.d('[START] launching telegram $user');
+
+        final url = Uri.parse('https://t.me/$user');
+
+        final canLaunch = await launcher.launchUrl(url);
+
+        if (!canLaunch) {
+          throw CanNotLaunchFailure(
+            url: url.toString(),
+            error: 'Can not launch telegram',
+            stackTrace: StackTrace.current,
+          );
+        }
+
+        _telemetryOnSuccess?.call();
+      },
+      onError: (e, s) {
+        final failure = CanNotLaunchFailure(
+          url: user,
+          error: e.toString(),
+          stackTrace: s,
+        );
+
+        _logger?.e(
+          '[ERROR] launching telegram $user',
+          time: DateTime.now(),
+          error: e,
+          stackTrace: s,
+        );
+
+        _telemetryOnError?.call(failure);
+
+        return failure;
+      },
+    );
+  }
+
+  @override
+  Future<Result<void>> launchWhatsapp({required String phone}) async {
+    return Result.asyncGuard(
+      () async {
+        _logger?.d('[START] launching whatsapp $phone');
+
+        final url = Uri.parse('https://wa.me/$phone');
+
+        final canLaunch = await launcher.launchUrl(url);
+
+        if (!canLaunch) {
+          throw CanNotLaunchFailure(
+            url: url.toString(),
+            error: 'Can not launch whatsapp',
+            stackTrace: StackTrace.current,
+          );
+        }
+
+        _telemetryOnSuccess?.call();
+      },
+      onError: (e, s) {
+        final failure = CanNotLaunchFailure(
+          url: phone,
+          error: e.toString(),
+          stackTrace: s,
+        );
+
+        _logger?.e(
+          '[ERROR] launching whatsapp $phone',
+          time: DateTime.now(),
+          error: e,
+          stackTrace: s,
+        );
+
+        _telemetryOnError?.call(failure);
+
+        return failure;
+      },
+    );
+  }
 }

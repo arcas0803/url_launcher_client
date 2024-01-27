@@ -52,4 +52,22 @@ abstract class UrlLauncherClient {
   /// Throws a [CanNotLaunchFailure] if the file can not be launched
   ///
   Future<Result<void>> launchFile({required String path});
+
+  /// [launchWhatsapp] launches a whatsapp
+  ///
+  /// [phone] is the phone to be launched
+  ///
+  /// Throws a [CanNotLaunchFailure] if the whatsapp can not be launched
+  ///
+  Future<Result<void>> launchWhatsapp({
+    required String phone,
+  });
+
+  /// [launchTelegram] launches a telegram
+  ///
+  /// [user] is the user to be launched
+  ///
+  /// Throws a [CanNotLaunchFailure] if the telegram can not be launched
+  ///
+  Future<Result<void>> launchTelegram({required String user});
 }
